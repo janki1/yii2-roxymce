@@ -87,6 +87,11 @@ class Module extends BaseModule
      * @var bool Set true for convert file names to unicode string
      */
     public bool $normalizeFileName = true;
+
+    /**
+     * @var bool Set to copy url with or without domain
+     */
+    public bool $urlWithDomain = true;
     
     /**
      * Initializes the module.

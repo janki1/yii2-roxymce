@@ -60,18 +60,17 @@ class FileHelper
     /**
      * Return true url of file
      *
-     * @param $path
-     *
+     * @param string $path
+     * @param Module $module
      * @return mixed
      */
-    public static function fileUrl($path)
+    public static function fileUrl($path, $module)
     {
-        /**@var Module $module */
-        $module = Yii::$app->controller->module;
         $uploadUrl = str_replace('\\', '/', Yii::getAlias($module->uploadFolder));
         $path      = Yii::getAlias(str_replace('\\', '/', $path));
         $url =  str_replace('\\', '/', str_replace(realpath($uploadUrl), $module->uploadUrl, $path));
-        return Url::to($url, $module->urlSchema);
+
+        return ($module->urlWithDomain) ? Url::to($url, $module->urlSchema) : parse_url($url, PHP_URL_PATH);
     }
 
     /**
@@ -81,7 +80,7 @@ class FileHelper
      *
      * @return mixed|string
      */
-    public static function filePreview($path)
+    public static function filePreview($path, $module)
     {
         $allowedTypes = array(
             IMAGETYPE_PNG,
@@ -95,7 +94,7 @@ class FileHelper
             $isSvg = static::isSvg($path);
         }
         if (in_array($detectedType, $allowedTypes) || $isSvg) {
-            return self::fileUrl($path);
+            return self::fileUrl($path, $module);
         } else {
             return self::fileIcon($path, true);
         }
